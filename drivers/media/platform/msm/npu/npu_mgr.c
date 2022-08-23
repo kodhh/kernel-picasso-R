@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
+=======
+ * Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
+>>>>>>> 6b4bd1e6da38642e2ffffe2271694dd61a8c6e9d
  */
 
 /* -------------------------------------------------------------------------
@@ -1668,6 +1672,7 @@ static int app_msg_proc(struct npu_host_ctx *host_ctx, uint32_t *msg)
 	struct npu_misc_cmd *misc_cmd = NULL;
 	int need_ctx_switch = 0;
 
+	memset(&kevt, 0, sizeof(kevt));
 	msg_id = msg[1];
 	switch (msg_id) {
 	case NPU_IPC_MSG_EXECUTE_DONE:
