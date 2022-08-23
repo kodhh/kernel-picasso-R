@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
+=======
+ * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
+>>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
  */
 
 #ifndef __SMB5_CHARGER_H
@@ -670,7 +674,11 @@ struct smb_charger {
 	int			fake_batt_status;
 	bool			step_chg_enabled;
 	bool			sw_jeita_enabled;
+<<<<<<< HEAD
 	bool                    dynamic_fv_enabled;
+=======
+	bool			jeita_arb_enable;
+>>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
 	bool			typec_legacy_use_rp_icl;
 	bool			is_hdc;
 	bool			chg_done;

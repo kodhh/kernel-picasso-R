@@ -1,7 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2009-2020, The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
+=======
+ * Copyright (c) 2009-2021, The Linux Foundation. All rights reserved.
+>>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
  */
 
 #ifndef _ARCH_ARM_MACH_MSM_SOCINFO_H_
@@ -87,6 +91,16 @@
 	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,bengal-iot")
 #define early_machine_is_bengalp_iot()	\
 	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,bengalp-iot")
+#define early_machine_is_msm8937()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,msm8937")
+#define early_machine_is_msm8917()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,msm8917")
+#define early_machine_is_sdm439()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,sdm439")
+#define early_machine_is_sdm429()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,sdm429")
+#define early_machine_is_qm215()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,qm215")
 #else
 #define of_board_is_sim()		0
 #define of_board_is_rumi()		0
@@ -124,6 +138,11 @@
 #define early_machine_is_sdm660()	0
 #define early_machine_is_bengal_iot()	0
 #define early_machine_is_bengalp_iot()	0
+#define early_machine_is_msm8937()	0
+#define early_machine_is_msm8917()	0
+#define early_machine_is_sdm439()	0
+#define early_machine_is_sdm429()	0
+#define early_machine_is_qm215()	0
 #endif
 
 #define PLATFORM_SUBTYPE_MDM	1
@@ -164,6 +183,11 @@ enum msm_cpu {
 	MSM_CPU_SDMMAGPIE,
 	MSM_CPU_BENGAL_IOT,
 	MSM_CPU_BENGALP_IOT,
+	MSM_CPU_8937,
+	MSM_CPU_8917,
+	MSM_CPU_SDM439,
+	MSM_CPU_SDM429,
+	MSM_CPU_QM215
 };
 
 struct msm_soc_info {

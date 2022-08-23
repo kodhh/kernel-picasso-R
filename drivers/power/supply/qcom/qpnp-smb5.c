@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
+=======
+ * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
+>>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
  */
 
 #include <linux/debugfs.h>
@@ -473,12 +477,19 @@ static int smb5_parse_dt_misc(struct smb5 *chip, struct device_node *node)
 
 	chg->sw_jeita_enabled = of_property_read_bool(node,
 				"qcom,sw-jeita-enable");
+<<<<<<< HEAD
 #ifdef CONFIG_BQ2597X_CHARGE_PUMP
 	chg->use_bq_pump = of_property_read_bool(node,
 				"mi,use-bq-pump");
 #endif
 	chg->use_smb_pump = of_property_read_bool(node,
 				"mi,use-smb-pump");
+=======
+
+	chg->jeita_arb_enable = of_property_read_bool(node,
+				"qcom,jeita-arb-enable");
+
+>>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
 	chg->pd_not_supported = chg->pd_not_supported ||
 			of_property_read_bool(node, "qcom,usb-pd-disable");
 
