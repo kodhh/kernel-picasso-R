@@ -9,7 +9,11 @@
 >>>>>>> 44cfed3239dcf2a417b2a17e80eed48a2069b852
 =======
  * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
+<<<<<<< HEAD
 >>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
+=======
+ * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+>>>>>>> dfb57fceb3cceeb229f652afd0eec4c380872faf
  */
 #include <linux/debugfs.h>
 #include <linux/errno.h>
@@ -1281,8 +1285,15 @@ static ssize_t tzdbgfs_read(struct file *file, char __user *buf,
 	struct seq_file *seq = file->private_data;
 	int tz_id = TZDBG_STATS_MAX;
 
-	if (seq)
-		tz_id = *(int *)(seq->private);
+	if (seq) {
+		if (seq->private)
+			tz_id = *(int *)(seq->private);
+		else {
+			pr_err("%s: Seq data private null unable to proceed\n",
+				 __func__);
+			return 0;
+		}
+	}
 	else {
 		pr_err("%s: Seq data null unable to proceed\n", __func__);
 		return 0;
