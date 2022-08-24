@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
-<<<<<<< HEAD
-/* Copyright (c) 2019, The Linux Foundation. All rights reserved. */
-/* Copyright (C) 2021 XiaoMi, Inc. */
-=======
 /* Copyright (c) 2019-2021, The Linux Foundation. All rights reserved. */
-<<<<<<< HEAD
->>>>>>> a513f716d3f5643f29e7ef27fc9e9ddbdd92a537
-=======
 /* Copyright (c) 2021, Qualcomm Innovation Center, Inc. All rights reserved. */
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
+/* Copyright (C) 2021 XiaoMi, Inc. */
 
 #define pr_fmt(fmt) "PM8008: %s: " fmt, __func__
 

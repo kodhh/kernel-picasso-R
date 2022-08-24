@@ -1,19 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
-<<<<<<< HEAD
- * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
- * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->>>>>>> 44cfed3239dcf2a417b2a17e80eed48a2069b852
-=======
  * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
-=======
  * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> dfb57fceb3cceeb229f652afd0eec4c380872faf
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 #include <linux/debugfs.h>
 #include <linux/errno.h>
@@ -480,25 +469,8 @@ static uint32_t qseelog_buf_size;
 static phys_addr_t disp_buf_paddr;
 
 static uint64_t qseelog_shmbridge_handle;
-<<<<<<< HEAD
-static struct qtee_shm shm;
-
-static struct proc_dir_entry *g_proc_dir;
-static struct proc_dir_entry *p_qsee_log_dump_handler;
-static DECLARE_WAIT_QUEUE_HEAD(qseelog_waitqueue);
-static atomic_t qseelog_wait = ATOMIC_INIT(0);
-
-void read_qseelog_wakeup(void)
-{
-	if (atomic_read(&qseelog_wait)) {
-		atomic_set(&qseelog_wait, 0);
-		wake_up_all(&qseelog_waitqueue);
-	}
-}
-=======
 static struct encrypted_log_info enc_qseelog_info;
 static struct encrypted_log_info enc_tzlog_info;
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
 
 static int tzdbg_request_encrypted_log(dma_addr_t buf_paddr,
 				       size_t len, uint32_t log_id);
@@ -777,17 +749,6 @@ static int _disp_log_stats(struct tzdbg_log_t *log,
 		log_start->offset = (log->log_pos.offset + 1) % log_len;
 	}
 
-<<<<<<< HEAD
-	if (buf_idx == TZDBG_QSEE_LOG) {
-		while (log_start->offset == log->log_pos.offset) {
-			atomic_set(&qseelog_wait, 1);
-			if (wait_event_freezable(qseelog_waitqueue, atomic_read(&qseelog_wait) == 0)) {
-				/* Some event woke us up, so let's quit */
-				return 0;
-			}
-		}
-	} else {
-=======
 	pr_debug("diag_buf wrap = %u, offset = %u\n",
 		log->log_pos.wrap, log->log_pos.offset);
 	while (log_start->offset == log->log_pos.offset) {
@@ -863,7 +824,6 @@ static int _disp_log_stats_v2(struct tzdbg_log_v2_t *log,
 	}
 	pr_debug("diag_buf wrap = %u, offset = %u\n",
 		log->log_pos.wrap, log->log_pos.offset);
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
 
 	while (log_start->offset == log->log_pos.offset) {
 		/*
@@ -881,7 +841,6 @@ static int _disp_log_stats_v2(struct tzdbg_log_v2_t *log,
 			memcpy_fromio((void *)tzdbg.diag_buf, tzdbg.virt_iobase,
 						debug_rw_buf_size);
 
-	}
 	}
 
 	max_len = (count > debug_rw_buf_size) ? debug_rw_buf_size : count;
@@ -1509,27 +1468,6 @@ static int  tzdbgfs_init(struct platform_device *pdev)
 		}
 	}
 
-<<<<<<< HEAD
-	g_proc_dir = proc_mkdir("tzdbg", 0);
-
-	if (g_proc_dir == 0) {
-		printk("Unable to mkdir /proc/tzdbg\n");
-		pr_err("%s: qsee log dump dirs in proc  create dir failed ! \n", __func__);
-		rc = -ENOMEM;
-		goto err;
-	}
-
-	p_qsee_log_dump_handler = proc_create("qsee_log_dump", 0, g_proc_dir, &qsee_log_dump_proc_fops);
-	if (p_qsee_log_dump_handler == NULL) {
-		pr_err("%s: qsee log dump dirs in proc  create failed ! \n", __func__);
-	}
-
-	tzdbg.disp_buf = kzalloc(max(debug_rw_buf_size,
-			tzdbg.hyp_debug_rw_buf_size), GFP_KERNEL);
-	if (tzdbg.disp_buf == NULL)
-		goto err;
-=======
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
 	platform_set_drvdata(pdev, dent_dir);
 	return 0;
 err:
@@ -1543,11 +1481,6 @@ static void tzdbgfs_exit(struct platform_device *pdev)
 	struct dentry *dent_dir;
 	dent_dir = platform_get_drvdata(pdev);
 	debugfs_remove_recursive(dent_dir);
-	if (g_qsee_log)
-		qtee_shmbridge_free_shm(&shm);
-
-	if (p_qsee_log_dump_handler != NULL)
-		proc_remove(p_qsee_log_dump_handler);
 }
 
 static int __update_hypdbg_base(struct platform_device *pdev,

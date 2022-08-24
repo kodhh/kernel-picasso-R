@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
->>>>>>> a307c36f6d7e9a9f5d04e449e1b1e53dc283005e
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <linux/completion.h>
@@ -395,12 +391,9 @@ struct usbpd {
 	struct workqueue_struct	*wq;
 	struct work_struct	sm_work;
 	struct work_struct	start_periph_work;
-<<<<<<< HEAD
 	struct delayed_work	src_check_work;
 
-=======
 	struct work_struct	restart_host_work;
->>>>>>> a307c36f6d7e9a9f5d04e449e1b1e53dc283005e
 	struct hrtimer		timer;
 	bool			sm_queued;
 
@@ -522,13 +515,10 @@ struct usbpd {
 	u8			get_battery_status_db;
 	bool			send_get_battery_status;
 	u32			battery_sts_dobj;
-<<<<<<< HEAD
 
 	/* uv wa */
 	int			uv_wa;
-=======
 	bool			typec_analog_audio_connected;
->>>>>>> 44cfed3239dcf2a417b2a17e80eed48a2069b852
 };
 
 static LIST_HEAD(_usbpd);	/* useful for debugging */
@@ -5517,12 +5507,9 @@ struct usbpd *usbpd_create(struct device *parent)
 	}
 	INIT_WORK(&pd->sm_work, usbpd_sm);
 	INIT_WORK(&pd->start_periph_work, start_usb_peripheral_work);
-<<<<<<< HEAD
 	INIT_DELAYED_WORK(&pd->src_check_work, source_check_workfunc);
 
-=======
 	INIT_WORK(&pd->restart_host_work, restart_usb_host_work);
->>>>>>> a307c36f6d7e9a9f5d04e449e1b1e53dc283005e
 	hrtimer_init(&pd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	pd->timer.function = pd_timeout;
 	mutex_init(&pd->swap_lock);
@@ -5578,7 +5565,6 @@ struct usbpd *usbpd_create(struct device *parent)
 	extcon_set_property_capability(pd->extcon, EXTCON_USB_HOST,
 			EXTCON_PROP_USB_SS);
 
-<<<<<<< HEAD
 	ret = of_property_read_u32(parent->of_node, "mi,limit_pd_vbus",
 			&pd->limit_pd_vbus);
 	if (ret) {
@@ -5600,10 +5586,8 @@ struct usbpd *usbpd_create(struct device *parent)
 
 	pd->vconn_is_external = device_property_present(parent,
 					"qcom,vconn-uses-external-source");
-=======
 	if (device_property_read_bool(parent, "qcom,no-usb3-dp-concurrency"))
 		pd->no_usb3dp_concurrency = true;
->>>>>>> a307c36f6d7e9a9f5d04e449e1b1e53dc283005e
 
 	pd->num_sink_caps = device_property_read_u32_array(parent,
 			"qcom,default-sink-caps", NULL, 0);

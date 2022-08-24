@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2015-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2015-2021, The Linux Foundation. All rights reserved.
->>>>>>> 6b4bd1e6da38642e2ffffe2271694dd61a8c6e9d
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <linux/of.h>
@@ -824,46 +820,6 @@ static void gsi_handle_irq(void)
 
 	if (!gsi_ctx->per.clk_status_cb())
 		return;
-<<<<<<< HEAD
-	type = gsi_readl(gsi_ctx->base +
-		GSI_EE_n_CNTXT_TYPE_IRQ_OFFS(ee));
-
-	if (!type)
-		return;
-
-	GSIDBG_LOW("type 0x%x\n", type);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_CH_CTRL_BMSK)
-		gsi_handle_ch_ctrl(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_EV_CTRL_BMSK)
-		gsi_handle_ev_ctrl(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_GLOB_EE_BMSK)
-		gsi_handle_glob_ee(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_IEOB_BMSK)
-		gsi_handle_ieob(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_INTER_EE_CH_CTRL_BMSK)
-		gsi_handle_inter_ee_ch_ctrl(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_INTER_EE_EV_CTRL_BMSK)
-		gsi_handle_inter_ee_ev_ctrl(ee);
-
-	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_GENERAL_BMSK)
-		gsi_handle_general(ee);
-
-	if (unlikely(++cnt > GSI_ISR_MAX_ITER)) {
-		/*
-		 * Max number of spurious interrupts from hardware.
-		 * Unexpected hardware state.
-		 */
-		GSIERR("Too many spurious interrupt from GSI HW\n");
-		GSI_ASSERT();
-	}
-
-=======
 
 	type = gsi_readl(gsi_ctx->base +
 		GSI_EE_n_CNTXT_TYPE_IRQ_OFFS(ee));
@@ -893,7 +849,6 @@ static void gsi_handle_irq(void)
 
 	if (type & GSI_EE_n_CNTXT_TYPE_IRQ_GENERAL_BMSK)
 		gsi_handle_general(ee);
->>>>>>> 954c35fe8fcf72aea671eaf9aee0e01c0ca882cf
 }
 
 static irqreturn_t gsi_isr(int irq, void *ctxt)

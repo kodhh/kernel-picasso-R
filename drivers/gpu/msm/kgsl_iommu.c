@@ -1,15 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
  * Copyright (c) 2011-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
- * Copyright (c) 2011-2021, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
->>>>>>> a307c36f6d7e9a9f5d04e449e1b1e53dc283005e
-=======
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <linux/compat.h>
@@ -2485,8 +2478,6 @@ out:
 	return ret;
 }
 
-<<<<<<< HEAD
-=======
 static int get_gpuaddr(struct kgsl_pagetable *pagetable,
 		struct kgsl_memdesc *memdesc, u64 start, u64 end,
 		u64 size, unsigned int align)
@@ -2516,7 +2507,6 @@ static int get_gpuaddr(struct kgsl_pagetable *pagetable,
 
 	return ret;
 }
->>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
 
 static int kgsl_iommu_get_gpuaddr(struct kgsl_pagetable *pagetable,
 		struct kgsl_memdesc *memdesc)

@@ -599,11 +599,7 @@ int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry)
 	if (!err)
 		f2fs_put_page(ipage, 1);
 out_fname:
-<<<<<<< HEAD
-	fscrypt_free_filename(&fname);
-=======
 	f2fs_free_filename(&fname);
->>>>>>> 954c35fe8fcf72aea671eaf9aee0e01c0ca882cf
 out:
 	f2fs_unlock_op(sbi);
 	return err;

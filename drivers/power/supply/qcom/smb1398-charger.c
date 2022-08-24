@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2020 The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
->>>>>>> a513f716d3f5643f29e7ef27fc9e9ddbdd92a537
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #define pr_fmt(fmt) "SMB1398: %s: " fmt, __func__
@@ -1185,14 +1181,10 @@ static int div2_cp_master_get_prop(struct power_supply *psy,
 		chip->cp_ilim = val->intval;
 		break;
 	case POWER_SUPPLY_PROP_CHIP_VERSION:
-<<<<<<< HEAD
-		val->intval = DIV2_CP_HW_VERSION_3;
-=======
 		val->intval = chip->pmic_rev_id->rev4;
 		break;
 	case POWER_SUPPLY_PROP_MODEL_NAME:
 		val->strval = div2_cp_get_model_name(chip);
->>>>>>> 3288a82dccb9801e7e47fd509aefebe41cad1415
 		break;
 	case POWER_SUPPLY_PROP_PARALLEL_MODE:
 		/* USBIN only */

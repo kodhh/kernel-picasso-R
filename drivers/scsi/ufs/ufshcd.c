@@ -3,12 +3,8 @@
  *
  * This code is based on drivers/scsi/ufs/ufshcd.c
  * Copyright (C) 2011-2013 Samsung India Software Operations
-<<<<<<< HEAD
  * Copyright (C) 2021 XiaoMi, Inc.
- * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
-=======
  * Copyright (c) 2013-2021, The Linux Foundation. All rights reserved.
->>>>>>> 6b4bd1e6da38642e2ffffe2271694dd61a8c6e9d
  *
  * Authors:
  *	Santosh Yaraganavi <santosh.sy@samsung.com>
@@ -5703,10 +5699,6 @@ static int ufshcd_complete_dev_init(struct ufs_hba *hba)
 	int err;
 	bool flag_res = 1;
 	ktime_t timeout;
-<<<<<<< HEAD
-	bool timeout_warn = false;
-=======
->>>>>>> 55dcca42232a81ddbf6d5231485aae471359489c
 
 	err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_SET_FLAG,
 		QUERY_FLAG_IDN_FDEVICEINIT, NULL);
@@ -5718,26 +5710,6 @@ static int ufshcd_complete_dev_init(struct ufs_hba *hba)
 	}
 
 	/*
-<<<<<<< HEAD
-	* Some vendor devices are taking longer time to complete its internal
-	* initialization, so set fDeviceInit flag poll time to 5 secs
-	*/
-	timeout = ktime_add_ms(ktime_get(), 8000);
-
-	/* poll for max. 5sec for fDeviceInit flag to clear */
-	while (1) {
-		timeout_warn = ktime_after(ktime_get(), timeout);
-		err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
-			QUERY_FLAG_IDN_FDEVICEINIT, &flag_res);
-		if (err || !flag_res || timeout_warn)
-			break;
-
-		/*
-		* Poll for this flag in a tight loop for first 1000 iterations.
-		* This is same as old logic which is working for most of the
-		* devices, so continue using the same.
-		*/
-=======
 	 * Some vendor devices are taking longer time to complete its internal
 	 * initialization, so set fDeviceInit flag poll time to 5 secs
 	 */
@@ -5756,20 +5728,11 @@ static int ufshcd_complete_dev_init(struct ufs_hba *hba)
 		 * This is same as old logic which is working for most of the
 		 * devices, so continue using the same.
 		 */
->>>>>>> 55dcca42232a81ddbf6d5231485aae471359489c
 		if (i == 1000)
 			msleep(20);
 		else
 			i++;
 	}
-<<<<<<< HEAD
-
-	if (timeout_warn)
-		dev_err(hba->dev,
-			"%s reading fDeviceInit flag timeout.\n",
-			__func__);
-=======
->>>>>>> 55dcca42232a81ddbf6d5231485aae471359489c
 
 	if (err)
 		dev_err(hba->dev,
@@ -8607,14 +8570,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba,
 			if (err)
 				break;
 
-<<<<<<< HEAD
-			res = wb_buf[0] << 24 | wb_buf[1] << 16 |
-				wb_buf[2] << 8 | wb_buf[3];
-			if (res) {
-=======
 			if (d_lu_wb_buf_alloc) {
-				hba->dev_info.wb_config_lun = true;
->>>>>>> edb7b6143c4e2348826fb91c43182b3ac40fdf8a
 				break;
 			}
 		}

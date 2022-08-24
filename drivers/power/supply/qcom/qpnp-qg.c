@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
->>>>>>> a6620d8d6320e1e0365ef0c33eeb8a246a9319fd
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #define pr_fmt(fmt)	"QG-K: %s: " fmt, __func__
@@ -2553,11 +2549,8 @@ static int qg_property_is_writeable(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_SOH:
 	case POWER_SUPPLY_PROP_FG_RESET:
 	case POWER_SUPPLY_PROP_BATT_AGE_LEVEL:
-<<<<<<< HEAD
 	case POWER_SUPPLY_PROP_FASTCHARGE_MODE:
-=======
 	case POWER_SUPPLY_PROP_CLEAR_SOH:
->>>>>>> a6620d8d6320e1e0365ef0c33eeb8a246a9319fd
 		return 1;
 	default:
 		break;
@@ -5666,15 +5659,12 @@ static int qpnp_qg_probe(struct platform_device *pdev)
 	chip->esr_actual = -EINVAL;
 	chip->esr_nominal = -EINVAL;
 	chip->batt_age_level = -EINVAL;
-<<<<<<< HEAD
 	chip->fastcharge_mode_enabled = false;
 
 #ifdef CONFIG_BATT_VERIFY_BY_DS28E16
 	chip->max_verify_psy = power_supply_get_by_name("batt_verify");
 #endif
-=======
 	chip->qg_charge_counter = -EINVAL;
->>>>>>> 86e677c6bcfd73ff948ae2ffb06bb3ee956c9799
 
 	chip->qg_version = (u8)of_device_get_match_data(&pdev->dev);
 

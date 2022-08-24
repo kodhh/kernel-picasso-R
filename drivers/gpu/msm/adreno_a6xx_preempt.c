@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> 84d90696df87c86c404223b5dbe39c8777eddfef
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include "adreno.h"

@@ -2,16 +2,9 @@
 /*
  * QTI Secure Execution Environment Communicator (QSEECOM) driver
  *
-<<<<<<< HEAD
- * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2012-2021, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
->>>>>>> 919b7ece2542a57c0d823c3f30cf76635844900a
-=======
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> dfb57fceb3cceeb229f652afd0eec4c380872faf
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #define pr_fmt(fmt) "QSEECOM: %s: " fmt, __func__

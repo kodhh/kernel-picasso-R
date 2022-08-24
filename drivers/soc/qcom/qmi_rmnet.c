@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
-<<<<<<< HEAD
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
- * Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> a513f716d3f5643f29e7ef27fc9e9ddbdd92a537
-=======
  * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
  */
 
 #include <soc/qcom/qmi_rmnet.h>

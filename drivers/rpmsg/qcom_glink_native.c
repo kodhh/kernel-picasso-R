@@ -1,12 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2016-2017, Linaro Ltd
-<<<<<<< HEAD
  * Copyright (C) 2021 XiaoMi, Inc.
- * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-=======
  * Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
->>>>>>> a513f716d3f5643f29e7ef27fc9e9ddbdd92a537
  */
 
 #include <linux/idr.h>

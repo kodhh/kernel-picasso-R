@@ -1,11 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
-<<<<<<< HEAD
- * Copyright (c) 2008-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2008-2021, The Linux Foundation. All rights reserved.
->>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 #ifndef __KGSL_H
 #define __KGSL_H
@@ -575,6 +571,16 @@ kgsl_mem_entry_put(struct kgsl_mem_entry *entry)
 	if (entry)
 		kref_put(&entry->refcount, kgsl_mem_entry_destroy);
 }
+
+ /**
+ * kgsl_mem_entry_put_deferred() - Puts refcount and triggers deferred
+ * mem_entry destroy when refcount is the last refcount.
+ * @entry: memory entry to be put.
+ *
+ * Use this to put a memory entry when we don't want to block
+ * the caller while destroying memory entry.
+ */
+ void kgsl_mem_entry_put_deferred(struct kgsl_mem_entry *entry);
 
 /*
  * kgsl_addr_range_overlap() - Checks if 2 ranges overlap

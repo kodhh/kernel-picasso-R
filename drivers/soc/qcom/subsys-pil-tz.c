@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
->>>>>>> 3288a82dccb9801e7e47fd509aefebe41cad1415
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <linux/kernel.h>
@@ -48,7 +44,6 @@
 #define desc_to_data(d) container_of(d, struct pil_tz_data, desc)
 #define subsys_to_data(d) container_of(d, struct pil_tz_data, subsys_desc)
 
-<<<<<<< HEAD
 #define STR_NV_SIGNATURE_DESTROYED "CRITICAL_DATA_CHECK_FAILED"
 static char last_modem_sfr_reason[MAX_SSR_REASON_LEN] = "none";
 static struct proc_dir_entry *last_modem_sfr_entry;
@@ -123,7 +118,6 @@ free_kobj:
 static DECLARE_DELAYED_WORK(create_kobj_work, checknv_kobj_create);
 static DECLARE_WORK(clean_kobj_work, checknv_kobj_clean);
 
-=======
 struct pil_map_fw_info {
 	void *region;
 	unsigned long attrs;
@@ -131,7 +125,6 @@ struct pil_map_fw_info {
 	struct device *dev;
 };
 
->>>>>>> 3288a82dccb9801e7e47fd509aefebe41cad1415
 /**
  * struct reg_info - regulator info
  * @reg: regulator handle

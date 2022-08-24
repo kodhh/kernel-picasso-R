@@ -1,15 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
-<<<<<<< HEAD
- * Copyright (c) 2008-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2021 XiaoMi, Inc.
-=======
  * Copyright (c) 2008-2021, The Linux Foundation. All rights reserved.
-<<<<<<< HEAD
->>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
-=======
  * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
->>>>>>> 1df74f61438ff4a0c6b083f4835224528fbf02a8
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #include <uapi/linux/sched/types.h>
@@ -234,13 +227,29 @@ int kgsl_readtimestamp(struct kgsl_device *device, void *priv,
 }
 EXPORT_SYMBOL(kgsl_readtimestamp);
 
-/* Scheduled by kgsl_mem_entry_put_deferred() */
-static void _deferred_put(struct work_struct *work)
-{
-	struct kgsl_mem_entry *entry =
-		container_of(work, struct kgsl_mem_entry, work);
+/* Scheduled by kgsl_mem_entry_destroy_deferred() */
+static void _deferred_destroy (struct work_struct *work)
+ {
+ 	struct kgsl_mem_entry *entry =
+ 		container_of(work, struct kgsl_mem_entry, work);
+ 
 
-	kgsl_mem_entry_put(entry);
+	kgsl_mem_entry_destroy(&entry->refcount);
+ }
+
+static void kgsl_mem_entry_destroy_deferred(struct kref *kref)
+ {
+	struct kgsl_mem_entry *entry =
+		container_of(kref, struct kgsl_mem_entry, refcount);
+
+	INIT_WORK(&entry->work, _deferred_destroy);
+ 	queue_work(kgsl_driver.mem_workqueue, &entry->work);
+ }
+ 
+void kgsl_mem_entry_put_deferred(struct kgsl_mem_entry *entry)
+{
+	if (entry)
+		kref_put(&entry->refcount, kgsl_mem_entry_destroy_deferred);
 }
 
 static struct kgsl_mem_entry *kgsl_mem_entry_create(void)
@@ -2430,8 +2439,7 @@ static bool gpuobj_free_fence_func(void *priv)
 			entry->memdesc.gpuaddr, entry->memdesc.size,
 			entry->memdesc.flags);
 
-	INIT_WORK(&entry->work, _deferred_put);
-	queue_work(kgsl_driver.mem_workqueue, &entry->work);
+	kgsl_mem_entry_put_deferred(entry);
 	return true;
 }
 
@@ -4691,10 +4699,6 @@ kgsl_gpumem_vm_close(struct vm_area_struct *vma)
 	if (!entry)
 		return;
 
-<<<<<<< HEAD
-	entry->memdesc.useraddr = 0;
-	kgsl_mem_entry_put(entry);
-=======
 	/*
 	 * Remove the memdesc from the mapped stat once all the mappings have
 	 * gone away
@@ -4704,7 +4708,6 @@ kgsl_gpumem_vm_close(struct vm_area_struct *vma)
 				&entry->priv->gpumem_mapped);
 
 	kgsl_mem_entry_put_deferred(entry);
->>>>>>> 30b2c2a0655f77cbee5982acd397f45b45dd9bae
 }
 
 static const struct vm_operations_struct kgsl_gpumem_vm_ops = {
