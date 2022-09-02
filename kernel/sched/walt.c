@@ -1440,6 +1440,13 @@ static inline u64 scale_exec_time(u64 delta, struct rq *rq)
 	return (delta * rq->task_exec_scale) >> 10;
 }
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+u64 get_scale_exec_time(u64 delta, int cpu)
+{
+	return scale_exec_time(delta, cpu_rq(cpu));
+}
+#endif
+
 /* Convert busy time to frequency equivalent
  * Assumes load is scaled to 1024
  */
