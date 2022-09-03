@@ -263,6 +263,7 @@ static const struct kernel_param_ops param_ops_mi_viptask = {
 
 module_param_cb(mi_viptask, &param_ops_mi_viptask, NULL, 0644);
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 static void add_uid_to_list(int uid, enum CLUSTER_AFFINITY type)
 {
 	if (unlikely(uid >= BIT_MAP_SIZE)) {
@@ -492,6 +493,7 @@ enum CLUSTER_AFFINITY mi_uid_type(int uid)
 	else return 0;
 }
 EXPORT_SYMBOL(mi_uid_type);
+#endif
 
 static int set_migt_freq(const char *buf, const struct kernel_param *kp)
 {
@@ -821,7 +823,9 @@ static void trigger_migt(void)
 	if (++sys_migt_count > first_lunch_fps && boost_policy >= MIGT_2_0
 	    && ((sys_migt_count % itask_detect_interval == 0)
 	    || (current->pid != render_pid))) {
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 		glk_freq_limit_start = 1;
+#endif
 		if (current->pid != render_pid) {
 			if (migt_debug)
 				pr_info("render pid change from %d to %d\n",
@@ -833,8 +837,10 @@ static void trigger_migt(void)
 			add_work_to_migt(current_uid().val);
 	}
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 	if (sys_migt_count <= first_lunch_fps)
 		glk_freq_limit_start = 0;
+#endif
 
 	render_pid = current->pid;
 	now = ktime_get_ns();
@@ -947,10 +953,12 @@ static void add_uid_to_ceiling_user(int uid)
 
 }
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 void __weak update_freq_limit(u64 frame_period)
 {
 	return;
 }
+#endif
 
 static void do_ceiling_limit(struct work_struct *work)
 {
@@ -1010,6 +1018,7 @@ static int migt_mmap(struct file *file, struct vm_area_struct *vma)
 		PAGE_SIZE, PAGE_SHARED)) {*/
 }
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 int get_cur_render_uid(void)
 {
 	return last_traced_uid;
@@ -1019,6 +1028,7 @@ int package_runtime_should_stop(void)
 {
 	return boost_policy == NO_MIGT;
 }
+#endif
 
 static long migt_ioctl(struct file *fp, unsigned int cmd,
 				 unsigned long arg)
@@ -1091,7 +1101,6 @@ static struct miscdevice migt_misc = {
 };
 
 #ifdef CONFIG_PACKAGE_RUNTIME_INFO
-
 static void vtask_boost_in_hrtimer(int timeout_ms)
 {
 	/* If the timer is already running, stop it */
@@ -1221,8 +1230,6 @@ void migt_hook(struct task_struct *tsk, u64 delta, int cpu)
 	}
 }
 
-#endif
-
 int migt_enable(void)
 {
 	return boost_policy;
@@ -1232,6 +1239,7 @@ u64 get_migt_thresh(void)
 {
 	return migt_thresh;
 }
+#endif
 
 static int migt_init(void)
 {

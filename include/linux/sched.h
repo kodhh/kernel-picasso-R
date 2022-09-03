@@ -29,9 +29,7 @@
 #include <linux/mm_event.h>
 #include <linux/task_io_accounting.h>
 #include <linux/rseq.h>
-#ifdef CONFIG_PACKAGE_RUNTIME_INFO
 #include <linux/pkg_stat.h>
-#endif
 
 /* task_struct member predeclarations (sorted alphabetically): */
 struct audit_context;
