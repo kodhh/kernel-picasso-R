@@ -11,7 +11,7 @@
 #include <linux/freezer.h>
 #include <linux/kthread.h>
 #if defined(CONFIG_MILLET) && defined(CONFIG_PACKAGE_RUNTIME_INFO)
-#include "../include/linux/millet.h"
+#include <linux/millet.h>
 #endif
 
 /* total number of freezing conditions in effect */

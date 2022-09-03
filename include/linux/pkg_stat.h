@@ -150,7 +150,6 @@ static inline void reset_render_info(enum RENDER_TYPE type) {}
 static inline void update_render_info(struct task_struct *tsk, enum RENDER_TYPE type) {}
 static inline int migt_enable(void) {return 0; }
 static inline int glk_enable(void) {return 0; }
-enum CLUSTER_AFFINITY mi_uid_type(int uid) {return 0; }
 static inline int fas_power_bias(struct task_struct *tsk) {return 0; }
 static inline void glk_maxfreq_break(bool val) {}
 static inline void glk_minfreq_break(bool val) {}
