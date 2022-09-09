@@ -483,7 +483,6 @@ static uint32_t display_buf_size;
 static uint32_t qseelog_buf_size;
 static phys_addr_t disp_buf_paddr;
 
-static uint64_t qseelog_shmbridge_handle;
 static struct encrypted_log_info enc_qseelog_info;
 static struct encrypted_log_info enc_tzlog_info;
 
