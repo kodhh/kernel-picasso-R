@@ -820,7 +820,6 @@ static void gsi_handle_irq(void)
 
 	if (!gsi_ctx->per.clk_status_cb())
 		return;
-
 	type = gsi_readl(gsi_ctx->base +
 		GSI_EE_n_CNTXT_TYPE_IRQ_OFFS(ee));
 

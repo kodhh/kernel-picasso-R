@@ -262,7 +262,6 @@
 #define COMBO_PRE_REGULATOR		2
 #define SMB1394_DIV2_CP_PRY		3
 #define SMB1394_DIV2_CP_SECY		4
-#define SMB1398_MAX_IIN			5000
 
 #define IS_SMB1394(role) \
 	(role == SMB1394_DIV2_CP_PRY || role == SMB1394_DIV2_CP_SECY)
@@ -565,9 +564,6 @@ static int smb1398_set_iin_ma(struct smb1398_chip *chip, int iin_ma)
 		dev_err(chip->dev, "Get SMB_EN_REASON failed, rc=%d\n", rc);
 		pval.intval = POWER_SUPPLY_CP_NONE;
 	}
-
-	if (iin_ma > SMB1398_MAX_IIN)
-		iin_ma = SMB1398_MAX_IIN;
 
 	iin_ma += 400;
 	if (iin_ma > MAX_QC_IIN_MA) {

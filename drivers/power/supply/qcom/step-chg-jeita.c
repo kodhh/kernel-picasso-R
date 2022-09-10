@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2017-2019, 2021 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2017-2019 The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
  */
 
@@ -18,7 +18,7 @@
 
 #define STEP_CHG_VOTER		"STEP_CHG_VOTER"
 #define JEITA_VOTER		"JEITA_VOTER"
-#define JEITA_FCC_SCALE_VOTER	"JEITA_FCC_SCALE_VOTER"
+#define DYNAMIC_FV_VOTER	"DYNAMIC_FV_VOTER"
 
 #define is_between(left, right, value) \
 		(((left) >= (right) && (left) >= (value) \
@@ -65,7 +65,6 @@ struct step_chg_info {
 	bool			vbat_avg_based_step_chg;
 	bool			batt_missing;
 	bool			taper_fcc;
-	bool			jeita_fcc_scaling;
 	int			jeita_fcc_index;
 	int			jeita_fv_index;
 	int			jeita_ffc_fv_index;
@@ -73,10 +72,6 @@ struct step_chg_info {
 	int			dynamic_ffc_fv_index;
 	int			step_index;
 	int			get_config_retry_count;
-	int			jeita_last_update_temp;
-	int			jeita_fcc_scaling_temp_threshold[2];
-	long			jeita_max_fcc_ua;
-	long			jeita_fcc_step_size;
 
 	struct step_chg_cfg	*step_chg_config;
 	struct jeita_fcc_cfg	*jeita_fcc_config;
@@ -267,8 +262,7 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 	u32 max_fv_uv, max_fcc_ma;
 	const char *batt_type_str;
 	const __be32 *handle;
-	int batt_id_ohms, rc, hysteresis[2] = {0};
-	u32 jeita_scaling_min_fcc_ua = 0;
+	int batt_id_ohms, rc;
 	union power_supply_propval prop = {0, };
 
 	handle = of_get_property(chip->dev->of_node,
@@ -332,7 +326,6 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		pr_err("max-fastchg-current-ma reading failed, rc=%d\n", rc);
 		return rc;
 	}
-	chip->jeita_max_fcc_ua = max_fcc_ma * 1000;
 
 	chip->taper_fcc = of_property_read_bool(profile_node, "qcom,taper-fcc");
 
@@ -399,46 +392,26 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		chip->sw_jeita_cfg_valid = false;
 	}
 
-	if (of_property_read_bool(profile_node, "qcom,jeita-fcc-scaling")) {
+	chip->dynamic_fv_cfg_valid = true;
+	rc = read_range_data_from_node(profile_node,
+			"qcom,dynamic-fv-ranges",
+			chip->dynamic_fv_config->fv_cfg,
+			BATT_HOT_DECIDEGREE_MAX, max_fv_uv);
+	if (rc < 0) {
+		pr_err("Read qcom,dynamic-fv-ranges failed from battery profile, rc=%d\n",
+					rc);
+		chip->dynamic_fv_cfg_valid = false;
+	}
 
-		rc = of_property_read_u32_array(profile_node,
-				"qcom,jeita-fcc-scaling-temp-threshold",
-				chip->jeita_fcc_scaling_temp_threshold, 2);
-		if (rc < 0)
-			pr_debug("Read jeita-fcc-scaling-temp-threshold from battery profile, rc=%d\n",
-				rc);
-
-		rc = of_property_read_u32(profile_node,
-			"qcom,jeita-scaling-min-fcc-ua",
-			&jeita_scaling_min_fcc_ua);
-		if (rc < 0)
-			pr_debug("Read jeita-scaling-min-fcc-ua from battery profile, rc=%d\n",
-				rc);
-
-		if ((jeita_scaling_min_fcc_ua &&
-			(jeita_scaling_min_fcc_ua < chip->jeita_max_fcc_ua)) &&
-			(chip->jeita_fcc_scaling_temp_threshold[0] <
-			chip->jeita_fcc_scaling_temp_threshold[1])) {
-			/*
-			 * Calculate jeita-fcc-step-size =
-			 *	(difference-in-fcc) / ( difference-in-temp)
-			 */
-			chip->jeita_fcc_step_size = div_s64(
-			(chip->jeita_max_fcc_ua - jeita_scaling_min_fcc_ua),
-			(chip->jeita_fcc_scaling_temp_threshold[1] -
-				chip->jeita_fcc_scaling_temp_threshold[0]));
-
-			if (chip->jeita_fcc_step_size > 0)
-				chip->jeita_fcc_scaling = true;
-		}
-
-		pr_debug("jeita-fcc-scaling: enabled = %d, jeita-fcc-scaling-temp-threshold = [%d, %d], jeita-scaling-min-fcc-ua = %ld, jeita-scaling-max_fcc_ua = %ld,jeita-fcc-step-size = %ld\n",
-			chip->jeita_fcc_scaling,
-			chip->jeita_fcc_scaling_temp_threshold[0],
-			chip->jeita_fcc_scaling_temp_threshold[1],
-			jeita_scaling_min_fcc_ua, chip->jeita_max_fcc_ua,
-			chip->jeita_fcc_step_size
-			);
+	chip->dynamic_ffc_fv_cfg_valid = true;
+	rc = read_range_data_from_node(profile_node,
+			"qcom,dynamic-ffc-fv-ranges",
+			chip->dynamic_ffc_fv_config->fv_cfg,
+			BATT_HOT_DECIDEGREE_MAX, max_fv_uv);
+	if (rc < 0) {
+		pr_debug("Read qcom,dynamic-ffc-fv-ranges failed from battery profile, rc=%d\n",
+					rc);
+		chip->dynamic_ffc_fv_cfg_valid = false;
 	}
 
 	return rc;
@@ -740,6 +713,82 @@ update_time:
 	return 0;
 }
 
+static int handle_dynamic_fv(struct step_chg_info *chip)
+{
+	union power_supply_propval pval = {0, };
+	int rc = 0, fv_uv, cycle_count;
+	u64 elapsed_us;
+	int batt_vol = 0;
+
+	rc = power_supply_get_property(chip->batt_psy,
+		POWER_SUPPLY_PROP_DYNAMIC_FV_ENABLED, &pval);
+	if (rc < 0)
+		chip->dynamic_fv_enable = 0;
+	else
+		chip->dynamic_fv_enable = pval.intval;
+
+	if (!chip->dynamic_fv_enable || !chip->dynamic_fv_cfg_valid) {
+		/*need recovery some setting*/
+		if (chip->fv_votable)
+			vote(chip->fv_votable, DYNAMIC_FV_VOTER, false, 0);
+		return 0;
+	}
+
+	elapsed_us = ktime_us_delta(ktime_get(), chip->dynamic_fv_last_update_time);
+	if (elapsed_us < STEP_CHG_HYSTERISIS_DELAY_US)
+		return 0;
+
+	rc = power_supply_get_property(chip->bms_psy,
+			POWER_SUPPLY_PROP_CYCLE_COUNT, &pval);
+	if (rc < 0) {
+		pr_err("Couldn't read %s property rc=%d\n",
+				chip->dynamic_fv_config->prop_name, rc);
+		return rc;
+	}
+	cycle_count = pval.intval;
+
+	rc = get_val(chip->dynamic_fv_config->fv_cfg,
+			0,
+			chip->dynamic_fv_index,
+			cycle_count,
+			&chip->dynamic_fv_index,
+			&fv_uv);
+	if (rc < 0) {
+		/* remove the vote if no step-based fv is found */
+		if (chip->fv_votable)
+			vote(chip->fv_votable, DYNAMIC_FV_VOTER, false, 0);
+		goto update_time;
+	}
+
+	power_supply_get_property(chip->batt_psy,
+		POWER_SUPPLY_PROP_VOLTAGE_NOW, &pval);
+	batt_vol = pval.intval;
+	if (batt_vol >= fv_uv) {
+		goto update_time;
+	}
+
+	chip->fv_votable = find_votable("FV");
+	if (!chip->fv_votable)
+		goto update_time;
+
+	vote(chip->fv_votable, DYNAMIC_FV_VOTER, true, fv_uv);
+
+	/*set battery full voltage to FLOAT VOLTAGE*/
+	pval.intval = fv_uv;
+	rc = power_supply_set_property(chip->bms_psy,
+		POWER_SUPPLY_PROP_VOLTAGE_MAX, &pval);
+	if (rc < 0) {
+		pr_err("Couldn't set CONSTANT VOLTAGE property rc=%d\n", rc);
+		return rc;
+	}
+
+	pr_debug("%s:cycle_count:%d,Batt_full:%d,fv:%d,\n", __func__, cycle_count, pval.intval, fv_uv);
+
+update_time:
+	chip->dynamic_fv_last_update_time = ktime_get();
+	return 0;
+}
+
 #define JEITA_SUSPEND_HYST_UV		50000
 #define BATT_COOL_THRESHOLD		150
 #define BATT_WARM_THRESHOLD		450
@@ -788,7 +837,7 @@ static int handle_jeita(struct step_chg_info *chip)
 			pr_err("%s:failed to read usb_is_removing", __func__);
 			return 0;
 		}
-		pr_info("%s:usb_is_removing=%d\n", __func__,pval.intval);
+		pr_debug("%s:usb_is_removing=%d\n", __func__,pval.intval);
 		if (!pval.intval)
 			return 0;
 	}
@@ -1029,7 +1078,7 @@ static void status_change_work(struct work_struct *work)
 	if (rc < 0)
 		pr_err("Couldn't handle sw jeita rc = %d\n", rc);
 
-	rc = handle_step_chg_config(chip);
+	rc = handle_dynamic_fv(chip);
 	if (rc < 0)
 		pr_err("Couldn't handle sw dynamic fv rc = %d\n", rc);
 
